@@ -6,7 +6,14 @@
 secrets/
 credentials/
 passwords.txt
+# Données Docker locales
+**/postgres_data/
+**/grafana_data/
+**/loki_data/
 
+# Secrets locaux
+.env
+*.secret
 # Ansible
 *.retry
 

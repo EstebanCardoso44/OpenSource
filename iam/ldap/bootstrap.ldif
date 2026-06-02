@@ -1,0 +1,61 @@
+dn: ou=users,dc=acme,dc=corp
+objectClass: organizationalUnit
+ou: users
+
+dn: ou=groups,dc=acme,dc=corp
+objectClass: organizationalUnit
+ou: groups
+
+dn: uid=alice,ou=users,dc=acme,dc=corp
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: Alice Admin
+sn: Admin
+uid: alice
+uidNumber: 1001
+gidNumber: 5000
+homeDirectory: /home/alice
+mail: alice@acme.corp
+userPassword: alice123
+
+dn: uid=bob,ou=users,dc=acme,dc=corp
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: Bob Dev
+sn: Dev
+uid: bob
+uidNumber: 1002
+gidNumber: 5000
+homeDirectory: /home/bob
+mail: bob@acme.corp
+userPassword: bob123
+
+dn: uid=carol,ou=users,dc=acme,dc=corp
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: Carol Viewer
+sn: Viewer
+uid: carol
+uidNumber: 1003
+gidNumber: 5000
+homeDirectory: /home/carol
+mail: carol@acme.corp
+userPassword: carol123
+
+dn: cn=admins,ou=groups,dc=acme,dc=corp
+objectClass: groupOfNames
+cn: admins
+member: uid=alice,ou=users,dc=acme,dc=corp
+
+dn: cn=devs,ou=groups,dc=acme,dc=corp
+objectClass: groupOfNames
+cn: devs
+member: uid=bob,ou=users,dc=acme,dc=corp
+
+dn: cn=viewers,ou=groups,dc=acme,dc=corp
+objectClass: groupOfNames
+cn: viewers
+member: uid=carol,ou=users,dc=acme,dc=corp
