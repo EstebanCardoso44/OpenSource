@@ -1,0 +1,9 @@
+---
+domain_name: "securebox.local"
+apache_server_admin: "admin@acme.corp"
+
+app_db_name: "acme_db"
+app_db_user: "app"
+
+tls_cert_path: "/etc/ssl/certs/acme-selfsigned.crt"
+tls_key_path: "/etc/ssl/private/acme-selfsigned.key"

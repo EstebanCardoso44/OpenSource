@@ -1,0 +1,6 @@
+---
+- name: Installer PHP
+  hosts: web
+  become: yes
+  roles:
+    - php

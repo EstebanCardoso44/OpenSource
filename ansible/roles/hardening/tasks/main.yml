@@ -1,0 +1,41 @@
+---
+- name: Installer UFW
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Désactiver le login root SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+  become: yes
+  notify: Restart ssh
+
+- name: Conserver PasswordAuthentication pour le lab Docker
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication yes'
+  become: yes
+  notify: Restart ssh
+
+- name: Désactiver l'affichage de la version Apache
+  lineinfile:
+    path: /etc/apache2/conf-available/security.conf
+    regexp: '^ServerTokens'
+    line: 'ServerTokens Prod'
+  become: yes
+  when: "'web' in group_names"
+  notify: Restart apache
+
+- name: Désactiver la signature Apache
+  lineinfile:
+    path: /etc/apache2/conf-available/security.conf
+    regexp: '^ServerSignature'
+    line: 'ServerSignature Off'
+  become: yes
+  when: "'web' in group_names"
+  notify: Restart apache

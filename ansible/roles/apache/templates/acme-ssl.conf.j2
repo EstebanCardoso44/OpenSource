@@ -1,0 +1,30 @@
+<VirtualHost *:80>
+    ServerName {{ domain_name }}
+    Redirect permanent / https://{{ domain_name }}/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ domain_name }}
+    ServerAdmin {{ apache_server_admin }}
+
+    DocumentRoot /var/www/acme
+
+    SSLEngine on
+    SSLCertificateFile {{ tls_cert_path }}
+    SSLCertificateKeyFile {{ tls_key_path }}
+
+    <Directory /var/www/acme>
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self'"
+
+    ErrorLog ${APACHE_LOG_DIR}/acme_error.log
+    CustomLog ${APACHE_LOG_DIR}/acme_access.log combined
+</VirtualHost>

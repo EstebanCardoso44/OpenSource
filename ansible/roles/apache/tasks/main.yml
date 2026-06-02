@@ -1,0 +1,96 @@
+---
+- name: Installer Apache, SSL, ModSecurity et OpenSSL
+  apt:
+    name:
+      - apache2
+      - libapache2-mod-security2
+      - openssl
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Activer les modules Apache nécessaires
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ssl
+    - headers
+    - rewrite
+    - security2
+  become: yes
+  notify: Restart apache
+
+- name: Créer le répertoire web applicatif
+  file:
+    path: /var/www/acme
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0750"
+  become: yes
+
+- name: Déployer une page PHP de test
+  copy:
+    dest: /var/www/acme/index.php
+    content: |
+      <?php
+      echo "SecureBox - Apache/PHP HTTPS OK";
+      ?>
+    owner: www-data
+    group: www-data
+    mode: "0640"
+  become: yes
+
+- name: Générer un certificat TLS autosigné
+  command: >
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048
+    -keyout {{ tls_key_path }}
+    -out {{ tls_cert_path }}
+    -subj "/C=FR/ST=France/L=Paris/O=Acme Corp/OU=IT/CN={{ domain_name }}"
+  args:
+    creates: "{{ tls_cert_path }}"
+  become: yes
+
+- name: Sécuriser la clé privée TLS
+  file:
+    path: "{{ tls_key_path }}"
+    owner: root
+    group: root
+    mode: "0600"
+  become: yes
+
+- name: Déployer le VirtualHost HTTPS
+  template:
+    src: acme-ssl.conf.j2
+    dest: /etc/apache2/sites-available/acme-ssl.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: yes
+  notify: Restart apache
+
+- name: Désactiver le site Apache par défaut
+  command: a2dissite 000-default.conf
+  become: yes
+  register: disable_default_site
+  changed_when: "'already disabled' not in disable_default_site.stdout"
+
+- name: Activer le site HTTPS Acme
+  command: a2ensite acme-ssl.conf
+  become: yes
+  register: enable_acme_site
+  changed_when: "'already enabled' not in enable_acme_site.stdout"
+  notify: Restart apache
+
+- name: S'assurer qu'Apache est démarré
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Redémarrer Apache pour appliquer la configuration SSL dans le lab Docker
+  command: service apache2 restart
+  become: yes
+  changed_when: false

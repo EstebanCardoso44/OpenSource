@@ -1,0 +1,4 @@
+---
+- import_playbook: install_php.yml
+- import_playbook: install_apache.yml
+- import_playbook: install_mariadb.yml
