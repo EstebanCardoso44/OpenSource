@@ -1,0 +1,19 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.71.0"
+  },
+  "ReportID": "019e8835-141d-7a68-aec0-c5be56613f93",
+  "CreatedAt": "2026-06-02T08:00:40.477684024-04:00",
+  "ArtifactID": "sha256:297bf90948d9e648e4455db1c9ade8cc6da32b303308562da1bcef80406b6740",
+  "ArtifactName": "audit/sources/suricata",
+  "ArtifactType": "repository",
+  "Metadata": {
+    "RepoURL": "https://github.com/OISF/suricata.git",
+    "Branch": "main",
+    "Commit": "9e82ff82e278644efd55cc7fa88e7ae895e04f90",
+    "CommitMsg": "fuzz: use heap threadvars allocations\n\nUse new allocator to properly set up thread storage.",
+    "Author": "Victor Julien \u003cvjulien@oisf.net\u003e",
+    "Committer": "Victor Julien \u003cvjulien@oisf.net\u003e"
+  }
+}

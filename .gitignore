@@ -22,3 +22,6 @@ dependency-check-data/
 # Python
 __pycache__/
 *.pyc
+
+# Sources clonées pour audit uniquement
+audit/sources/
